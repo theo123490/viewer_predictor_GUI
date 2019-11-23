@@ -2,11 +2,12 @@
 # pythonprogramminglanguage.com
 
 import sys
-from PyQt5.Qt import QApplication, QClipboard
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPlainTextEdit, QLabel, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QWidget, QPlainTextEdit, QLabel, QPushButton, QApplication
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QFont
+import logging
+
 
 class ExampleWindow(QMainWindow):
     def __init__(self):
@@ -25,19 +26,11 @@ class ExampleWindow(QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        # Add Button
-        self.button = QPushButton('PyQt5 button', self)
-        self.button.setToolTip('This is an example button')
-        self.button.move(100,70)
-        self.button.clicked.connect(self.on_click)
-        self.button.move(600,70)
-
         #add title label
         self.title_label = QLabel(self)
         self.title_label.setText('Title')
         self.title_label.move(10,10)
         self.title_label.setFont(QFont('Arial', 20))
-        self.title_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
         # Add title text area
         self.title_text = QPlainTextEdit(self)
@@ -55,16 +48,43 @@ class ExampleWindow(QMainWindow):
         self.Content_text.move(10,150)
         self.Content_text.resize(500,400)
 
+        # output title label
+        self.output_title_label = QLabel(self)
+        self.output_title_label.setText('Output :')
+        self.output_title_label.move(530,130)
+        self.output_title_label.setFont(QFont('Arial', 12))
+        self.output_title_label.adjustSize()
+        self.output_title_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+
+        # Add Button
+        self.button = QPushButton('find keywords', self)
+        self.button.setToolTip('This is an example button')
+        self.button.clicked.connect(self.on_click)
+        self.button.move(600,70)
+
+        #Add Logger
+        self.logger = QPlainTextEdit(self)
+        self.logger.setReadOnly(True)
+        self.logger.move(530,150)
+        self.logger.resize(200,300)
+
+
+
+
+
 
 
         self.show()
 
+
+
     def on_click(self):
         print(self.title_text.toPlainText())
+        self.logger.appendPlainText(self.title_text.toPlainText())
 
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mainWin = ExampleWindow()
     mainWin.show()
     sys.exit( app.exec_() )
