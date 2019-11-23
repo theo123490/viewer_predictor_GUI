@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QPlainTextEdit, QLabel, QPushB
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QFont
 import logging
+import Feature_extraction as fe
 
 
 class ExampleWindow(QMainWindow):
@@ -56,11 +57,17 @@ class ExampleWindow(QMainWindow):
         self.output_title_label.adjustSize()
         self.output_title_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
-        # Add Button
-        self.button = QPushButton('find keywords', self)
-        self.button.setToolTip('This is an example button')
-        self.button.clicked.connect(self.on_click)
-        self.button.move(600,70)
+        # Add Button tokenize title
+        self.tokenize_title = QPushButton('tokenize title', self)
+        self.tokenize_title.setToolTip('Tokenize the title')
+        self.tokenize_title.clicked.connect(self.token_title)
+        self.tokenize_title.move(600,40)
+
+        # Add Button find keywords
+        self.find_keywords = QPushButton('find keywords', self)
+        self.find_keywords.setToolTip('find 20 keywords from content')
+        self.find_keywords.clicked.connect(self.find_keyword)
+        self.find_keywords.move(600,70)
 
         #Add Logger
         self.logger = QPlainTextEdit(self)
@@ -69,18 +76,22 @@ class ExampleWindow(QMainWindow):
         self.logger.resize(200,300)
 
 
-
-
-
-
-
         self.show()
 
 
 
-    def on_click(self):
-        print(self.title_text.toPlainText())
-        self.logger.appendPlainText(self.title_text.toPlainText())
+    def find_keyword(self):
+        self.logger.setPlainText('')
+        keyword_dict = fe.find_content_keyword(self.Content_text.toPlainText())
+        print(keyword_dict)
+        self.logger.appendPlainText(str(keyword_dict))
+    
+    def token_title(self):
+        self.logger.setPlainText('')
+        title_dict = fe.find_title_keyword(self.title_text.toPlainText())
+        print(title_dict)
+        self.logger.appendPlainText(str(title_dict))
+
 
 
 if __name__ == "__main__":
